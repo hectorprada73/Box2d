@@ -1,220 +1,152 @@
-#include <SFML/Graphics.hpp>
-#include <SFML/Window.hpp>
-#include "../lib/ImageHandler.h"
-//#include <Box2D.h>
 
+#include <SFML/Graphics.hpp>
 
 #define sDown 0
 #define sLeft 48
 #define sRight 96
 #define sUp 144
 
+int main()
+{
+    sf::RenderWindow App(sf::VideoMode(1161, 700), "SFML Views");
 
-int main() {
+    //cargo mi sprite
+    sf::Image BackgroundImage;
+    if (!BackgroundImage.LoadFromFile("/home/hector/git/Box2d/Box2d/imagenes/map.jpg"))
+        return EXIT_FAILURE;
+    sf::Sprite Background(BackgroundImage);
 
-	sf::RenderWindow Game(sf::VideoMode(1161,700,32), "Ventana Negra");
-	sf::Event Event;
-	//sf::Shape box = sf::Shape::Rectangle(0,0,20,20,sf::Color(127,52,100,255));
+	sf::Sprite player;
+	sf::Image temp;
 
-	sf::Sprite player, background, agente;
-	sf::Image tempImage, agenteImage;
-	sf::Image temp2;
-	//implementando el imahendler.h
-	sf::Sprite sprite = ImageHandler().LoadImage("/home/hector/git/Box2d/Box2d/imagenes/map.jpg");
-
-
-
-	float velx = 0, vely = 0, velx1 = 0, vely1 = 0;
-	float x=10, y=10, x1=300, y1=300, moveSpeed=8, moveSpeed1=6;
-	int sourceX=0, sourceY=sDown, sourceX1=0, sourceY1=sDown;
+	float velx = 0, vely = 0;
+	float x=500, y=300, moveSpeed=11;
+	int sourceX=0, sourceY=sDown;
 
 
-	//if (!temp2.LoadFromFile("/home/hector/git/Box2d/Box2d/imagenes/map.jpg"))
-	//	return EXIT_FAILURE;
-	//	background.SetImage(temp2);
-
-	if (!tempImage.LoadFromFile("/home/hector/git/Box2d/Box2d/imagenes/Player.png"))
+	if (!temp.LoadFromFile("/home/hector/git/Box2d/Box2d/imagenes/Player.png"))
 		return EXIT_FAILURE;
-		player.SetImage(tempImage);
+		player.SetImage(temp);
 
-	if (!agenteImage.LoadFromFile("/home/hector/git/Box2d/Box2d/imagenes/Player.png"))
-		return EXIT_FAILURE;
-		agente.SetImage(agenteImage);
+	App.SetFramerateLimit(27);
 
-	Game.SetFramerateLimit(27);
+    // Create another sprite for the cursor
+    sf::Image CursorImage;
+    if (!CursorImage.LoadFromFile("/home/hector/git/Box2d/Box2d/imagenes/cursor.png"))
+        return EXIT_FAILURE;
+    sf::Sprite Cursor(CursorImage);
+
+    // Resize the background, so that it's much bigger than the window
+    Background.Resize(1161*2, 700*2);
+
+    // Define a text for displaying some instructions
+    sf::String Text("presione las flechas para mover mapa\npresione + y - para zoom y unzoom");
+    Text.Move(10, 500);
+    Text.SetColor(sf::Color::White);
+
+    //creo el view centrado en center
+    sf::Vector2f Center(500, 300);
+    sf::Vector2f HalfSize(400, 300);
+    sf::View View(Center, HalfSize);
+
+    Cursor.SetCenter(32, 32);
+    Cursor.SetPosition(Center);
+
+    while (App.IsOpened())
+    {
+        sf::Event Event;
+        while (App.GetEvent(Event))
+        {
+            if (Event.Type == sf::Event::Closed)
+                App.Close();
+
+            if ((Event.Type == sf::Event::KeyPressed) && (Event.Key.Code == sf::Key::Escape))
+                App.Close();
+        }
+        //definicion del view
+
+        float Offset = 200.f * App.GetFrameTime();
+        if (App.GetInput().IsKeyDown(sf::Key::Up))    View.Move( 0,      -Offset);
+        if (App.GetInput().IsKeyDown(sf::Key::Down))  View.Move( 0,       Offset);
+        if (App.GetInput().IsKeyDown(sf::Key::Left))  View.Move(-Offset,  0);
+        if (App.GetInput().IsKeyDown(sf::Key::Right)) View.Move( Offset,  0);
+
+        //zoom y unzoom
+
+        if (App.GetInput().IsKeyDown(sf::Key::Add))      View.Zoom(1.101f);
+        if (App.GetInput().IsKeyDown(sf::Key::Subtract)) View.Zoom(0.899f);
 
 
-	//box.SetPosition(100,100);
-//	sf::Image image;
-//	if (!image.LoadFromFile("/home/hector/workspace/Box2d/imagenes/box.png"))
-//			return EXIT_FAILURE;
-//	image.CreateMaskFromColor(sf::Color(255,25,110,255));
-	//sprite.SetImage(image);
-	//sprite.SetPosition(200,200);
-//	bool doSleep = true;
-//	b2Vec2 gravity(0, 9.8f);
-//	int it =10;
-//	float scale = 30;
-//	float timestep = 1 / 60;
-//
-//	b2AABB worldAABB;
-//	worldAABB.lowerBound.Set(-1000 / scale, 1000 / scale);
-//	worldAABB.upperBound.Set(1000 / scale, 1000 / scale);
-//
-//	b2World* world;
-//	world = new b2World(worldAABB, gravity, doSleep);
-
-
-	while(Game.IsOpened())
+        if(App.GetInput().IsKeyDown(sf::Key::A))
 		{
-			while(Game.GetEvent(Event))
-			{
-				if(Event.Type == sf::Event::Closed || Event.Key.Code == sf::Key::Escape)
-					Game.Close();
-			}
-//			if(Game.GetInput().IsKeyDown(sf::Key::A))
-//				box.Move(-1,0);
-//
-//			else if(Game.GetInput().IsKeyDown(sf::Key::D))
-//				box.Move(1,0);
-//
-//			else if(Game.GetInput().IsKeyDown(sf::Key::W))
-//				box.Move(0,-1);
-//
-//			else if(Game.GetInput().IsKeyDown(sf::Key::S))
-//				box.Move(0,1);
+			//sprite.Move(-1,0);
+			sourceY = sLeft;
+			velx = -moveSpeed;
+			//player.Move(-10,0);
+		}
+		else if(App.GetInput().IsKeyDown(sf::Key::D))
+		{
+			//sprite.Move(-1,0);
+			sourceY = sRight;
+			velx = moveSpeed;
+			//player.Move(10,0);
 
+		}
+		else
+			velx = 0;
 
-			if(Game.GetInput().IsKeyDown(sf::Key::Left))
-			{
-				//sprite.Move(-1,0);
-				sourceY = sLeft;
-				velx = -moveSpeed;
-				//player.Move(-10,0);
-			}
-			else if(Game.GetInput().IsKeyDown(sf::Key::Right))
-			{
-				//sprite.Move(-1,0);
-				sourceY = sRight;
-				velx = moveSpeed;
-				//player.Move(10,0);
+		if(App.GetInput().IsKeyDown(sf::Key::W))
+		{
+			//sprite.Move(-1,0);
+			sourceY = sUp;
+			vely = -moveSpeed;
+			//player.Move(10,-1);
 
-			}
-			else
-				velx = 0;
+		}
+		else if(App.GetInput().IsKeyDown(sf::Key::S))
+		{
+			//sprite.Move(-1,0);
+			sourceY = sDown;
+			vely = moveSpeed;
+			//player.Move(0,10);
 
-			if(Game.GetInput().IsKeyDown(sf::Key::Up))
-			{
-				//sprite.Move(-1,0);
-				sourceY = sUp;
-				vely = -moveSpeed;
-				//player.Move(10,-1);
+		}
+		else
+			vely = 0;
 
-			}
-			else if(Game.GetInput().IsKeyDown(sf::Key::Down))
-			{
-				//sprite.Move(-1,0);
-				sourceY = sDown;
-				vely = moveSpeed;
-				//player.Move(0,10);
+		x+= velx;
+		y+= vely;
 
-			}
-			else
-				vely = 0;
+		if(velx !=0 || vely !=0)
+			sourceX += temp.GetWidth() /4;
+		else
+			sourceX= 0;
 
-			x+= velx;
-			y+= vely;
+		if (sourceX == temp.GetWidth())
+			sourceX =0;
 
-			if(velx !=0 || vely !=0)
-				sourceX += tempImage.GetWidth() /4;
-			else
-				sourceX= 0;
+		player.SetSubRect(sf::IntRect(sourceX,sourceY,sourceX + temp.GetWidth() /4, sourceY + temp.GetHeight() /4));
+		player.SetPosition(x,y);
 
-			if (sourceX == tempImage.GetWidth())
-				sourceX =0;
+		// instancio el view
+        App.SetView(View);
 
-			player.SetSubRect(sf::IntRect(sourceX,sourceY,sourceX + tempImage.GetWidth() /4, sourceY + tempImage.GetHeight() /4));
-			player.SetPosition(x,y);
+        App.Clear();
 
+        App.Draw(Background);
 
+        App.Draw(player);
 
-// IMPLEMENTACION PARA AGENTE
+        sf::Vector2f CursorPos = App.ConvertCoords(App.GetInput().GetMouseX(), App.GetInput().GetMouseY());
+        Cursor.SetPosition(CursorPos);
+        App.Draw(Cursor);
 
-			if(Game.GetInput().IsKeyDown(sf::Key::A))
-			{
-				//sprite.Move(-1,0);
-				sourceY1 = sLeft;
-				velx1 = -moveSpeed1;
-				//player.Move(-10,0);
-			}
-			else if(Game.GetInput().IsKeyDown(sf::Key::D))
-			{
-				//sprite.Move(-1,0);
-				sourceY1 = sRight;
-				velx1 = moveSpeed1;
-				//player.Move(10,0);
+        App.SetView(App.GetDefaultView());
 
-			}
-			else
-				velx1 = 0;
+        App.Draw(Text);
 
-			if(Game.GetInput().IsKeyDown(sf::Key::W))
-			{
-				//sprite.Move(-1,0);
-				sourceY1 = sUp;
-				vely1 = -moveSpeed1;
-				//player.Move(10,-1);
+        App.Display();
+    }
 
-			}
-			else if(Game.GetInput().IsKeyDown(sf::Key::S))
-			{
-				//sprite.Move(-1,0);
-				sourceY1 = sDown;
-				vely1 = moveSpeed1;
-				//player.Move(0,10);
-
-			}
-			else
-				vely1 = 0;
-
-			x1+= velx1;
-			y1+= vely1;
-
-			if(velx1 !=0 || vely1 !=0)
-				sourceX1 += agenteImage.GetWidth() /4;
-			else
-				sourceX1= 0;
-
-			if (sourceX1 == agenteImage.GetWidth())
-				sourceX1 =0;
-
-			agente.SetSubRect(sf::IntRect(sourceX1,sourceY1,sourceX1 + agenteImage.GetWidth() /4, sourceY1 + agenteImage.GetHeight() /4));
-			agente.SetPosition(x1,y1);
-
-//			else if(Game.GetInput().IsKeyDºown(sf::Key::Right))
-//			{
-//				//sprite.Move(1,0);
-//
-//				sourceY = sRight;
-//				velx = moveSpeed;
-//			}
-//
-//			else if(Game.GetInput().IsKeyDown(sf::Key::Up))
-//							//sprite.Move(0,-1);
-//
-//			else if(Game.GetInput().IsKeyDown(sf::Key::Down))
-//							sprite.Move(0,1);
-//			Game.Draw(box);
-			//Game.Clear(sf::Color(36,91,100,255));
-
-			Game.Draw(sprite);
-
-			Game.Draw(player);
-			Game.Draw(agente);
-			//Game.Draw(sprite);
-			Game.Display();
-
-	}
-
-	return EXIT_SUCCESS;
+    return EXIT_SUCCESS;
 }

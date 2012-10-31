@@ -37,11 +37,15 @@ public:
 
 
 	    // This is the copy constructor
-	ImageHandler(const ImageHandler& Copy) : Image(Copy.Image), Sprite(Copy.Sprite)
+	sf::Sprite ImageHandler(const string& Imagefile)
 	    {
 	        // This is the trick : we setup the sprite
 	        // to use our image, instead of the one of Copy
+			Image.LoadFromFile(Imagefile);
 	        Sprite.SetImage(Image);
+
+	        return Sprite;
+
 	    }
 
 	    // ... a lot of useful functions ...
