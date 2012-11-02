@@ -13,45 +13,21 @@
 
 using namespace std;
 
-class ImageHandler{
+class ImageHandler {
 
-private :
-
-    sf::Image  Image;
-    sf::Sprite Sprite;
+	sf::Sprite sprite;
 
 public:
-
 	//virtual ~ImageHandler();
+	virtual sf::Sprite LoadImage(const string &filename, sf::Image &image)
+	{
 
+		image.LoadFromFile(filename);
+		sprite.SetImage(image);
 
-//	sf::Sprite LoadImage(string filename)
-//	{
-//		if (!image.LoadFromFile(filename))
-//			cout << "no cargo imagen" << endl;
-//
-//			sprite.SetImage(image);
-//
-//			return sprite;
-//	}
+		return sprite;
 
-
-	    // This is the copy constructor
-	sf::Sprite ImageHandler(const string& Imagefile)
-	    {
-	        // This is the trick : we setup the sprite
-	        // to use our image, instead of the one of Copy
-			Image.LoadFromFile(Imagefile);
-	        Sprite.SetImage(Image);
-
-	        return Sprite;
-
-	    }
-
-	    // ... a lot of useful functions ...
-
-
-
+	}
 };
 
 #endif /* IMAGEHANDLER_H_ */

@@ -21,8 +21,8 @@ int main() {
 	sf::Image temp2;
 	//implementando el imahendler.h
 	sf::Sprite sprite;
-	ImageHandler.sprite("/home/hector/git/Box2d/Box2d/imagenes/map.jpg");
-
+	string string1= "/home/hector/git/Box2d/Box2d/imagenes/map.jpg";
+	sprite = ImageHandler().LoadImage(string1,temp2);
 
 
 	float velx = 0, vely = 0, velx1 = 0, vely1 = 0;
