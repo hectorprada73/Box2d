@@ -22,7 +22,7 @@ public:
 
 private:
 	image_manager( const image_manager& );
-	image_manager& operator =( const image_manager& );
+	image_manager operator =( const image_manager& );
 
 public:
 	const sf::Image&	get_image( const std::string& filename );
@@ -30,8 +30,8 @@ public:
 	void				delete_image( const std::string& filename );
 
 private:
-	std::map< std::string, sf::Image > images_;
-	std::vector< std::string > resource_directories_;
+	std::map< std::string, sf::Image  > images_;
+
 };
 
 #endif /* IMAGEMANAGER_H_ */

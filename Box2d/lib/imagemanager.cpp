@@ -4,22 +4,17 @@
  *  Created on: Nov 1, 2012
  *      Author: hector
  */
-
 #include "imagemanager.h"
-
 #include <map>
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include "imagemanager.h"
 
-image_manager::image_manager() : images_(), resource_directories_()
-{
-}
+image_manager::image_manager() : images_(){}
 
 image_manager::~image_manager()
 {
 	images_.clear();
-	resource_directories_.clear();
 }
 
 const sf::Image& image_manager::get_image( const std::string& filename )
@@ -39,26 +34,11 @@ const sf::Image& image_manager::get_image( const std::string& filename )
 	// The image doesen't exists. Create it and save it.
 	sf::Image image;
 
-	// Search project's main directory
 	if( image.LoadFromFile( filename ) )
 	{
 		images_[filename] = image;
 		std::cout << "DEBUG_MESSAGE: " << filename << " loading image.\n";
 		return images_[filename];
-	}
-
-	// If the image has still not been found, search all registered directories
-	for( std::vector< std::string >::iterator it = resource_directories_.begin();
-		 it != resource_directories_.end();
-		 ++it )
-	{
-		if( image.LoadFromFile( (*it) + filename ) )
-		{
-			images_[filename] = image;
-			std::cout << "DEBUG_MESSAGE: " << filename << " loading image.\n";
-			return images_[filename];
-		}
-
 	}
 
 	std::cout << "GAME_ERROR: Image was not found. It is filled with an empty image.\n";
@@ -87,5 +67,3 @@ void image_manager::delete_image( const std::string& filename )
 	if( it != images_.end() )
 		images_.erase( it );
 }
-
-
