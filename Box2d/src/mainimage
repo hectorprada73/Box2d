@@ -32,7 +32,7 @@ int main()
 	agente2.SetImage(img_mgr.get_image("/home/hector/git/Box2d/Box2d/imagenes/Player2.png"));
     agente1.SetPosition(50,50);
     agente2.SetPosition(150,150);
-    bool isVisible = true;
+    bool isVisible = true;// para esconder el sprite
 
     //creo el view centrado en center
     sf::Vector2f Center(500, 300);
@@ -49,7 +49,8 @@ int main()
             if (Event.Type == sf::Event::Closed)
                 window.Close();
 			// You should not do this, but we will; just to verify that it works correctly ;
-            if (Event.Type == sf::Event::KeyPressed && Event.Key.Code == sf::Key::Space )
+            if (Event.Type == sf::Event::KeyPressed && Event.Key.Code == sf::Key::Space ) //condicion para
+            	//eliminar el sprite!
             {
             	isVisible = false;
             	img_mgr.delete_image( img_mgr.get_image( "/home/hector/git/Box2d/Box2d/imagenes/Player2.png" ) );
@@ -70,7 +71,7 @@ int main()
 			//if (Event.Type == sf::Event::KeyPressed && Event.Key.Code == sf::Key::LControl )
 			//	img_mgr.delete_image( img_mgr.get_image( "other.png" ) );
         }
-        if (isVisible == true)
+        if (isVisible)// dejan de dibujar el sprite!
         	window.Draw(agente2);
 
 		// Draw sprites

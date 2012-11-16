@@ -1,0 +1,5 @@
+Hola muchachos. El main.cpp lo compilan y les muestra el mapa que estaba hecho el dia que se mostro en clase.
+si le colocan .cpp al mainimage o al orig que esta en la carpeta src les corre otras ventanas, tienen 
+implementado el img_manager los dos de maneras distintas. Y tambien se muestra como esconder un sprite en tal 
+caso que maten a un jugador, etc. Simplemente dejan de dibujar el sprite, esto se muestra en el mainimage,
+esta comentado esa parte!
